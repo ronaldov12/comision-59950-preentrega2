@@ -62,8 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
 function eliminarProducto(index) {
     // Recupero el carrito desde localStorage
     const productosEnCarrito = JSON.parse(localStorage.getItem("productosEnCarrito")) || [];
-    // Elimino el producto basado en el índice
-    productosEnCarrito.splice(index, 1);
+    // Verifico si el producto en la posición dada tiene una cantidad mayor a 1
+    if (productosEnCarrito[index].cantidad > 1) {
+        // Disminuyo la cantidad del producto en el carrito
+        productosEnCarrito[index].cantidad--;
+    } else {
+        // Elimino el producto si la cantidad es 1
+        productosEnCarrito.splice(index, 1);
+    }
     // Actualizo el carrito en localStorage
     localStorage.setItem("productosEnCarrito", JSON.stringify(productosEnCarrito));
     // Recargo la página para actualizar la vista del carrito
@@ -73,7 +79,7 @@ function eliminarProducto(index) {
 // Función para calcular el total con IVA
 function calcularTotalConIva(carrito) {
     const IVA = 0.21; // Declaro una constante IVA con el valor de esta
-    let total = carrito.reduce((acumulador, producto) => 
+    let total = carrito.reduce((acumulador, producto) =>
         acumulador + (producto.precio * producto.cantidad), 0);  // Sumo los precios de los productos seleccionados en el carrito 
     total = total + (total * IVA); // Le agrego el IVA al total
     return total; // Devolvemos el total como número
