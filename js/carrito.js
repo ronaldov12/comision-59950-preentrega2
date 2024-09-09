@@ -96,24 +96,44 @@ function pagarEnCuotas(total) {
         if (cuotas === 3 || cuotas === 6 || cuotas === 12) {
             // Calculo el monto total a cuotas
             let montoPorCuota = total / cuotas;
-            alert(`El monto a pagar por cada cuota en ${cuotas} cuotas es: ${montoPorCuota.toFixed(2)}$`);
             // Llamo a la función que simula el pago con tarjeta, pasando el monto de la primera cuota
             let pagoExitoso = simularPagoConTarjeta(montoPorCuota.toFixed(2)); // Simula el pago de la primera cuota
             if (pagoExitoso) {
-                alert("Pago de la primera cuota realizado exitosamente.");// Si el pago fue exitoso, muestro un mensaje de confirmación
+                Swal.fire({
+                    title: 'Muchas gracias por la compra!',
+                    text: `Pago de la primera cuota realizado exitosamente. El monto a pagar por cada cuota en ${cuotas} cuotas es: ${montoPorCuota.toFixed(2)}$.`, // Usar template literals
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+            // Si el pago fue exitoso, muestro un mensaje de confirmación
             }
         } else {
-            alert("Opción no válida. Elija entre 3, 6 o 12 cuotas.");
+            Swal.fire({
+                title: 'Error!',
+                text: 'Opción no válida. Elija entre 3, 6 o 12 cuotas.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            })
         }
     } else if (respuesta === 'no') {
         // Si el usuario elige no pagar en cuotas, se solicita el pago del total completo
         let pagoExitoso = simularPagoConTarjeta(total.toFixed(2));
         // Muestra un mensaje de éxito si el pago fue exitoso
         if (pagoExitoso) {
-            alert("Pago completo realizado exitosamente.");
+            Swal.fire({
+                title: 'Muchas gracias por la compra!',
+                text: 'Pago completo realizado exitosamente.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            })
         }
     } else {
-        alert("Opción no válida. Por favor ingrese 'si' o 'no'.");
+        Swal.fire({
+            title: 'Error!',
+            text: 'Opción no válida. Por favor ingrese "si" o "no"',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        })
     }
 }
 
@@ -125,14 +145,26 @@ function simularPagoConTarjeta(montoTotal) {
 
     // Verifico si el número de la tarjeta tiene 16 dígitos, el CVV tiene 3 dígitos, y la fecha de vencimiento tiene 4 dígitos
     if (numeroTarjeta.length === 16 && cvv.length === 3 && vencimiento.length === 4) {
-        // Si los datos son correctos, muestro un mensaje de éxito y confirmo que el pago se ha realizado
-        alert(`Pago exitoso. Se ha debitado ${montoTotal}$ de su tarjeta.`);
+        // Si los datos son correctos, muestro un mensaje de éxito y confirmo que el pago se ha realizado#
+        Toastify({
+            text: `Pago exitoso. Se ha debitado ${montoTotal}$ de su tarjeta.`,
+            duration: 4500, // Duración del toast en milisegundos
+            close: true,    // Mostrar botón de cerrar
+            gravity: "top", // Posición: top o bottom
+            position: "center", // Posición: left, center o right
+            backgroundColor: "#249e24", // Color de fondo
+        }).showToast();
         return true; // Devuelvo true para indicar que el pago fue exitoso
     } else {
-        alert("Error en el pago. Verifique los datos e inténtelo de nuevo.");
-        return false;
+        Swal.fire({
+            title: 'Error en el pago. Verifique los datos e inténtelo de nuevo.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        })
     }
+    return false;
 }
+
 
 // Función para finalizar la compra
 function finalizarCompra(carrito) {
@@ -147,4 +179,3 @@ function finalizarCompra(carrito) {
     document.getElementById('total-carrito').textContent = '0';
 }
 
-finalizarCompra();
