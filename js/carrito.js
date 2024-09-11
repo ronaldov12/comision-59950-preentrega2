@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+
 // Función para eliminar un producto del carrito
 function eliminarProducto(index) {
     // Recupero el carrito desde localStorage
@@ -86,83 +87,104 @@ function calcularTotalConIva(carrito) {
 }
 
 // Función para preguntar al usuario si desea pagar en cuotas
+// Función para manejar el pago en cuotas o completo
 function pagarEnCuotas(total) {
-    let respuesta = prompt("¿Desea pagar en cuotas? si/no").toLowerCase();
+    Swal.fire({
+        title: '¿Desea pagar en cuotas?',
+        input: 'select',// Muestra un menú desplegable para seleccionar la opción
+        inputOptions: {
+            'no': 'No, pagar el total completo',// Opción para pagar el total de una vez
+            '3': '3 cuotas',
+            '6': '6 cuotas',
+            '12': '12 cuotas'
+        },
+        inputPlaceholder: 'Seleccione una opción',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar'
+    }).then(async (resultado) => {  // resultado contiene la respuesta del usuario a la ventana emergente
+        if (resultado.isConfirmed) {// Verifico si el usuario ha confirmado la selección
+            if (resultado.value === 'no') {// Si el usuario eligió pagar el total completo
+                // Si elige no pagar en cuotas, realiza el pago completo
+                const pagoExitoso = await simularPagoConTarjeta(total.toFixed(2));  // Llama a la función para simular el pago con tarjeta de crédito
+                if (pagoExitoso) {// Si el pago fue exitoso
+                    // Muestra un mensaje de éxito con SweetAlert2
+                    Swal.fire({
+                        title: 'Muchas gracias por la compra!',
+                        text: 'Pago completo realizado exitosamente.',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            } else if (['3', '6', '12'].includes(resultado.value)) {// Si el usuario eligió pagar en cuotas
+                // Paga en cuotas (si seleccionó 3, 6 o 12)
+                const cuotas = parseInt(resultado.value);  // Obtiene el número de cuotas seleccionadas
+                const montoPorCuota = (total / cuotas).toFixed(2);// Calculo el monto a pagar por cada cuota
 
-    // Verifico si la respuesta es sí
-    if (respuesta === "si") {
-        let cuotas = parseInt(prompt("Elija el número de cuotas: 3, 6 o 12"));
-        // Valido a cuántas cuotas desea pagar
-        if (cuotas === 3 || cuotas === 6 || cuotas === 12) {
-            // Calculo el monto total a cuotas
-            let montoPorCuota = total / cuotas;
-            // Llamo a la función que simula el pago con tarjeta, pasando el monto de la primera cuota
-            let pagoExitoso = simularPagoConTarjeta(montoPorCuota.toFixed(2)); // Simula el pago de la primera cuota
-            if (pagoExitoso) {
+                // Simula el pago con tarjeta para la primera cuota
+                const pagoExitoso = await simularPagoConTarjeta(montoPorCuota); // Llama a la función para simular el pago con tarjeta de crédito para la primera cuota
+                if (pagoExitoso) {
+                    Swal.fire({
+                        title: 'Muchas gracias por la compra!',
+                        text: `Pago de la primera cuota realizado exitosamente. El monto a pagar por cada cuota en ${cuotas} cuotas es: ${montoPorCuota}$`,
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            } else {// Si la opción seleccionada no es válida
                 Swal.fire({
-                    title: 'Muchas gracias por la compra!',
-                    text: `Pago de la primera cuota realizado exitosamente. El monto a pagar por cada cuota en ${cuotas} cuotas es: ${montoPorCuota.toFixed(2)}$.`, // Usar template literals
-                    icon: 'success',
+                    title: 'Error!',
+                    text: 'Opción no válida. Por favor seleccione una opción correcta.',
+                    icon: 'error',
                     confirmButtonText: 'Aceptar'
                 });
-            // Si el pago fue exitoso, muestro un mensaje de confirmación
             }
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Opción no válida. Elija entre 3, 6 o 12 cuotas.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            })
         }
-    } else if (respuesta === 'no') {
-        // Si el usuario elige no pagar en cuotas, se solicita el pago del total completo
-        let pagoExitoso = simularPagoConTarjeta(total.toFixed(2));
-        // Muestra un mensaje de éxito si el pago fue exitoso
-        if (pagoExitoso) {
-            Swal.fire({
-                title: 'Muchas gracias por la compra!',
-                text: 'Pago completo realizado exitosamente.',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            })
-        }
-    } else {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Opción no válida. Por favor ingrese "si" o "no"',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-        })
-    }
+    });
 }
 
-// Función para simular el pago con tarjeta de crédito
-function simularPagoConTarjeta(montoTotal) {
-    let numeroTarjeta = prompt("Ingrese el número de su tarjeta de crédito (16 dígitos):"); //Solicito al usuario que ingrese el número de su tarjeta de crédito
-    let cvv = prompt("Ingrese el código de seguridad (CVV, 3 dígitos):"); // Solicito al usuario que ingrese el código de seguridad (CVV)
-    let vencimiento = prompt("Ingrese la fecha de vencimiento (4 dígitos):");// Solicito al usuario que ingrese la fecha de vencimiento de su tarjeta
-
-    // Verifico si el número de la tarjeta tiene 16 dígitos, el CVV tiene 3 dígitos, y la fecha de vencimiento tiene 4 dígitos
-    if (numeroTarjeta.length === 16 && cvv.length === 3 && vencimiento.length === 4) {
-        // Si los datos son correctos, muestro un mensaje de éxito y confirmo que el pago se ha realizado#
-        Toastify({
-            text: `Pago exitoso. Se ha debitado ${montoTotal}$ de su tarjeta.`,
-            duration: 4500, // Duración del toast en milisegundos
-            close: true,    // Mostrar botón de cerrar
-            gravity: "top", // Posición: top o bottom
-            position: "center", // Posición: left, center o right
-            backgroundColor: "#249e24", // Color de fondo
-        }).showToast();
-        return true; // Devuelvo true para indicar que el pago fue exitoso
-    } else {
-        Swal.fire({
-            title: 'Error en el pago. Verifique los datos e inténtelo de nuevo.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-        })
+// Función asíncrona para simular el pago con tarjeta de crédito
+async function simularPagoConTarjeta(montoTotal) {
+    const { value: datos } = await Swal.fire({
+        // Muestra una ventana emergente con SweetAlert2 para ingresar los datos de la tarjeta
+        title: 'Ingrese los datos de su tarjeta',
+        html: `
+            <input id="numeroTarjeta" class="swal2-input" placeholder="Número de tarjeta (16 dígitos)" maxlength="16">
+            <input id="cvv" class="swal2-input" placeholder="CVV (3 dígitos)" maxlength="3">
+            <input id="vencimiento" class="swal2-input" placeholder="Fecha de vencimiento (4 dígitos)" maxlength="4">
+        `,
+        focusConfirm: false,// Desactiva el enfoque automático en el primer campo de entrada
+        preConfirm: () => {// Función para extraer los datos ingresados
+            return {
+                numeroTarjeta: document.getElementById('numeroTarjeta').value,
+                cvv: document.getElementById('cvv').value,
+                vencimiento: document.getElementById('vencimiento').value
+            };
+        }
+    });
+     // Verifico si el usuario ingresó datos
+    if (datos) {
+        const { numeroTarjeta, cvv, vencimiento } = datos;
+        if (numeroTarjeta.length === 16 && cvv.length === 3 && vencimiento.length === 4) {
+            // Verific la validez de los datos ingresados
+            Toastify({
+                text: `Pago exitoso. Se ha debitado ${montoTotal}$ de su tarjeta.`,
+                duration: 4500,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#249e24",
+            }).showToast();
+            return true;
+        } else {
+            Swal.fire({
+                title: 'Error en el pago. Verifique los datos e inténtelo de nuevo.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
     }
-    return false;
+    return false;// Devuelve false si no se ingresaron datos o si los datos no son válidos
 }
 
 
@@ -178,4 +200,3 @@ function finalizarCompra(carrito) {
     document.getElementById('carrito-contenedor').innerHTML = '<p>El carrito está vacío.</p>';
     document.getElementById('total-carrito').textContent = '0';
 }
-

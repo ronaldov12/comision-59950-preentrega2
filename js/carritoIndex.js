@@ -1,11 +1,11 @@
-// Defino un array de productos con sus respectivas propiedades: id, nombre y precio
-const productos = [
-    { id: 1, nombre: "Reloj Tommy Hilfiger", precio: 359, imagen: 'img/hollyfinger.webp' },
-    { id: 2, nombre: "Reloj Tissot Everytime Gent", precio: 549, imagen: 'img/relojtissot.webp' },
-    { id: 3, nombre: "Reloj Tissot Seastar", precio: 764, imagen: 'img/relojtissotseastar.webp' },
-    { id: 4, nombre: "Reloj Swatch Ashbayang", precio: 130, imagen: 'img/swatchAshbayang.webp' },
-];
+let productos = []; 
 
+fetch("js/productos.json")
+    .then(response => response.json())
+    .then(data => {
+        productos = data;
+        mostrarProductos();
+    });
 
 // agrego todos los botones para agregar productos al carrito
 let botonAgregarAlCarrito = document.querySelectorAll(".agregarProductoAlCarrito");
