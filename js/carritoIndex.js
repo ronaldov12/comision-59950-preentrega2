@@ -1,3 +1,4 @@
+
 let productos = []; 
 
 fetch("js/productos.json")
@@ -13,6 +14,7 @@ let botonAgregarAlCarrito = document.querySelectorAll(".agregarProductoAlCarrito
 const numeroDeBolso = document.querySelector("#numeroDeBolso")
 
 
+
 // Función para mostrar los productos disponibles en la pagina
 function mostrarProductos() {
     // agrego el id contenedor donde se muestran los productos
@@ -26,15 +28,40 @@ function mostrarProductos() {
 
         // Creo un contenido para el producto con su nombre y precio
         productoDiv.innerHTML = `
-            <img src="${producto.imagen}" alt="${producto.nombre}"></a>
+            <img src="${producto.imagen}" alt="${producto.nombre}" style="width: 100%; height: auto;">
             <h3>${producto.nombre}</h3>
             <p>Precio: ${producto.precio}$</p>
             <button class="agregarProductoAlCarrito" id="${producto.id}">Agregar al carrito</button>
-            `;
+        `;
+
+
+        productoDiv.style.display = 'flex';
+        productoDiv.style.flexDirection = 'column';
+        productoDiv.style.alignItems = 'center';
+        productoDiv.style.padding = '10px';
+        productoDiv.style.borderRadius = '5px';
+        productoDiv.style.backgroundColor = ' white ';
+        productoDiv.style.width = '280px'; 
+        productoDiv.style.boxSizing = 'border-box';
+        productoDiv.style.fontFamily = 'kanit, sans-serif'; 
 
         // Agrego el producto al contenedor de productos
+        const botonAgregar = productoDiv.querySelector('.agregarProductoAlCarrito');
+        botonAgregar.style.backgroundColor = '#900C3F '; // Color de fondo verde
+        botonAgregar.style.color = 'white'; // Color del texto
+        botonAgregar.style.border = 'none'; // Sin borde
+        botonAgregar.style.padding = '10px 20px'; // Ajusta el padding
+        botonAgregar.style.borderRadius = '5px'; // Bordes redondeados
+        botonAgregar.style.cursor = 'pointer'; // Cambia el cursor al pasar sobre el botón
+        botonAgregar.style.fontSize = '16px'; // Tamaño de la fuente
+
         productosContainer.appendChild(productoDiv);
     });
+
+    productosContainer.style.display = 'flex';
+    productosContainer.style.flexWrap = 'wrap';
+    productosContainer.style.justifyContent = 'center'; 
+    productosContainer.style.gap = '100px';
 
     actualizarBotonAgregar();
     console.log(botonAgregarAlCarrito);
@@ -76,6 +103,17 @@ function agregarAlCarrito(evento) {
     actualizarNumeroDeBolso();
     // Guardo el carrito actualizado en el localStorage
     localStorage.setItem("productosEnCarrito", JSON.stringify(carrito));
+
+    // Mostrar notificación con Toastify
+    Toastify({
+        text: `¡${productoAgregado.nombre} fue agregado al carrito!`,
+        duration: 3000, // Duración en milisegundos
+        close: true, // Muestra el botón de cerrar
+        gravity: "top", // Posición vertical
+        position: "right", // Posición horizontal
+        backgroundColor: "#900C3F", // Color de fondo
+        stopOnFocus: true // Detiene la animación cuando el usuario pasa el mouse sobre la notificación
+    }).showToast();
 }
 
 // Función para actualizar el número de productos en el carrito
@@ -84,6 +122,13 @@ function actualizarNumeroDeBolso() {
     let nuevoNumeroDeBolso = carrito.reduce((acc, producto) => acc + producto.cantidad, 0);
     // Actualizo el contenido del elemento que muestra el número de productos en el carrito
     numeroDeBolso.innerText = nuevoNumeroDeBolso;
+
+    numeroDeBolso.style.color = "#ffffff";  
+    numeroDeBolso.style.fontWeight = "bold";  
+    numeroDeBolso.style.fontSize = "20px"; 
+    numeroDeBolso.style.textDecoration = "none";  
+    numeroDeBolso.style.listStyle = "none"; 
+
 }
 
 

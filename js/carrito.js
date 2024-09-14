@@ -26,13 +26,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Total: ${(producto.precio * producto.cantidad).toFixed(2)}$</p>
                 <button class="eliminar-producto" data-index="${index}">Eliminar del carrito</button> 
             `;
+            // Estilos en línea para el div del producto
+            productoDiv.style.display = 'flex';
+            productoDiv.style.flexDirection = 'column';
+            productoDiv.style.alignItems = 'center';
+            productoDiv.style.padding = '10px';
+            productoDiv.style.borderRadius = '5px';
+            productoDiv.style.backgroundColor = 'white';
+            productoDiv.style.width = '270px';
+            productoDiv.style.boxSizing = 'border-box';
+            productoDiv.style.fontFamily = 'kanit, sans-serif'; // Aplicar la fuente
+
+            // Estilo para la imagen dentro del div
+            const imagen = productoDiv.querySelector('img');
+            imagen.style.width = '100%';
+            imagen.style.height = 'auto';
+            imagen.style.maxHeight = '220px';
+            imagen.style.objectFit = 'cover';
+
+            // Estilo para el botón de eliminar producto
+            const botonEliminar = productoDiv.querySelector('.eliminar-producto');
+            botonEliminar.style.backgroundColor = '#900C3F';
+            botonEliminar.style.color = 'white';
+            botonEliminar.style.border = 'none';
+            botonEliminar.style.padding = '10px 20px';
+            botonEliminar.style.borderRadius = '5px';
+            botonEliminar.style.cursor = 'pointer';
+            botonEliminar.style.fontSize = '16px';
 
             // Agrego el div del producto al contenedor del carrito
             carritoContenedor.appendChild(productoDiv);
 
             // Acumuló el total de cada producto (precio * cantidad) para calcular el total de la compra
             totalCompra += producto.precio * producto.cantidad;
+
+            // Estilos para el contenedor del carrito
+            carritoContenedor.style.display = 'flex';
+            carritoContenedor.style.flexDirection = 'column';
+            carritoContenedor.style.alignItems = 'center';
+            carritoContenedor.style.margin = '0 auto';
+            carritoContenedor.style.maxWidth = '800px';
+            carritoContenedor.style.padding = '20px';
+            carritoContenedor.style.boxSizing = 'border-box';
+            carritoContenedor.style.gap = '20px';
+
         });
+
 
         // Actualizo el valor total en el DOM
         totalCarritoElemento.textContent = totalCompra.toFixed(2);
@@ -40,6 +79,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Cree y agregue el botón de finalizar compra
         const finalizarCompraBtn = document.createElement('button');
         finalizarCompraBtn.textContent = 'Finalizar Compra';
+
+        // Estilos para el botón de finalizar compra
+        finalizarCompraBtn.style.backgroundColor = '#28a745'; // Color de fondo verde
+        finalizarCompraBtn.style.color = 'white'; // Color del texto
+        inalizarCompraBtn.style.border = 'none';
+        finalizarCompraBtn.style.padding = '15px 22px';
+        finalizarCompraBtn.style.borderRadius = '7px'; 
+        finalizarCompraBtn.style.cursor = 'pointer'; 
+        finalizarCompraBtn.style.fontSize = '16px'; 
+        finalizarCompraBtn.style.marginTop = '20px'; 
+
         // Agrego un evento al botón para llamar a la función finalizarCompra cuando se hace clic
         finalizarCompraBtn.addEventListener('click', () => finalizarCompra(productosEnCarrito));
         carritoContenedor.appendChild(finalizarCompraBtn); // Agrego el botón al contenedor del carrito
@@ -53,11 +103,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         // Mensaje cuando el carrito está vacío
-        carritoContenedor.innerHTML = '<p>El carrito está vacío.</p>';
+        carritoContenedor.innerHTML = `
+        <p style="
+        font-size: 55px;
+        color: #888;
+        text-align: center;
+        margin-top: 20px;
+        ">El carrito está vacío.</p>
+`;
+
+        // Actualiza el texto del total del carrito
         totalCarritoElemento.textContent = '0';
     }
 });
-
 
 // Función para eliminar un producto del carrito
 function eliminarProducto(index) {
@@ -162,7 +220,7 @@ async function simularPagoConTarjeta(montoTotal) {
             };
         }
     });
-     // Verifico si el usuario ingresó datos
+    // Verifico si el usuario ingresó datos
     if (datos) {
         const { numeroTarjeta, cvv, vencimiento } = datos;
         if (numeroTarjeta.length === 16 && cvv.length === 3 && vencimiento.length === 4) {
@@ -188,7 +246,6 @@ async function simularPagoConTarjeta(montoTotal) {
 }
 
 
-// Función para finalizar la compra
 function finalizarCompra(carrito) {
     // Calculo el total con IVA
     const totalConIva = calcularTotalConIva(carrito);
@@ -197,6 +254,13 @@ function finalizarCompra(carrito) {
     // Limpia el carrito después de la compra
     localStorage.removeItem('productosEnCarrito');
     // Muevo el contenedor del carrito y el total a 0
-    document.getElementById('carrito-contenedor').innerHTML = '<p>El carrito está vacío.</p>';
+    document.getElementById('carrito-contenedor').innerHTML = `
+    <p style="
+    font-size: 55px;
+    color: #888;
+    text-align: center;
+    margin-top: 20px;
+    ">El carrito está vacío.</p>
+`
     document.getElementById('total-carrito').textContent = '0';
 }
