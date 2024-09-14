@@ -1,0 +1,9 @@
+.heroSection {
+    position: relative;
+    height: 80vh;
+    background-image: url("../img/herosection.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}

@@ -49,22 +49,6 @@ divContainer.style.alignItems = 'center';
 divContainer.style.justifyContent = 'space-between';  
 
 //*main
-//!section 1
-// hero section
-const heroSection = document.createElement('div');
-heroSection.id = 'heroSection';
-
-document.getElementById('heroSection').appendChild(heroSection);
-
-heroSection.style.position = 'relative';
-heroSection.style.height = '80vh'; 
-heroSection.style.backgroundImage = 'url("/img/herosection.webp")';
-heroSection.style.backgroundSize = 'cover'; 
-heroSection.style.backgroundPosition = 'center'; 
-heroSection.style.backgroundRepeat = 'no-repeat'; 
-heroSection.style.backgroundAttachment = 'fixed';
-
-
 //! section 2
 const contenedorPrincipal = document.querySelector('div > #productos-contenedor');
 
