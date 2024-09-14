@@ -200,6 +200,51 @@ function pagarEnCuotas(total) {
         }
     });
 }
+
+// Función asíncrona para simular el pago con tarjeta de crédito
+async function simularPagoConTarjeta(montoTotal) {
+    const { value: datos } = await Swal.fire({
+        // Muestra una ventana emergente con SweetAlert2 para ingresar los datos de la tarjeta
+        title: 'Ingrese los datos de su tarjeta',
+        html: `
+            <input id="numeroTarjeta" class="swal2-input" placeholder="Número de tarjeta (16 dígitos)" maxlength="16">
+            <input id="cvv" class="swal2-input" placeholder="CVV (3 dígitos)" maxlength="3">
+            <input id="vencimiento" class="swal2-input" placeholder="Fecha de vencimiento (4 dígitos)" maxlength="4">
+        `,
+        focusConfirm: false,// Desactiva el enfoque automático en el primer campo de entrada
+        preConfirm: () => {// Función para extraer los datos ingresados
+            return {
+                numeroTarjeta: document.getElementById('numeroTarjeta').value,
+                cvv: document.getElementById('cvv').value,
+                vencimiento: document.getElementById('vencimiento').value
+            };
+        }
+    });
+    // Verifico si el usuario ingresó datos
+    if (datos) {
+        const { numeroTarjeta, cvv, vencimiento } = datos;
+        if (numeroTarjeta.length === 16 && cvv.length === 3 && vencimiento.length === 4) {
+            // Verific la validez de los datos ingresados
+            Toastify({
+                text: `Pago exitoso. Se ha debitado ${montoTotal}$ de su tarjeta.`,
+                duration: 4500,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#249e24",
+            }).showToast();
+            return true;
+        } else {
+            Swal.fire({
+                title: 'Error en el pago. Verifique los datos e inténtelo de nuevo.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    }
+    return false;// Devuelve false si no se ingresaron datos o si los datos no son válidos
+}
+
 // Función para finalizar la compra
 // Función para finalizar la compra
 function finalizarCompra(carrito) {
