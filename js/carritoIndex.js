@@ -47,13 +47,13 @@ function mostrarProductos() {
 
         // Agrego el producto al contenedor de productos
         const botonAgregar = productoDiv.querySelector('.agregarProductoAlCarrito');
-        botonAgregar.style.backgroundColor = '#900C3F '; // Color de fondo verde
-        botonAgregar.style.color = 'white'; // Color del texto
-        botonAgregar.style.border = 'none'; // Sin borde
-        botonAgregar.style.padding = '10px 20px'; // Ajusta el padding
-        botonAgregar.style.borderRadius = '5px'; // Bordes redondeados
-        botonAgregar.style.cursor = 'pointer'; // Cambia el cursor al pasar sobre el botón
-        botonAgregar.style.fontSize = '16px'; // Tamaño de la fuente
+        botonAgregar.style.backgroundColor = '#900C3F '; 
+        botonAgregar.style.color = 'white'; 
+        botonAgregar.style.border = 'none'; 
+        botonAgregar.style.padding = '10px 20px';
+        botonAgregar.style.borderRadius = '5px'; 
+        botonAgregar.style.cursor = 'pointer'; 
+        botonAgregar.style.fontSize = '16px'; 
 
         productosContainer.appendChild(productoDiv);
     });
@@ -106,13 +106,13 @@ function agregarAlCarrito(evento) {
 
     // Mostrar notificación con Toastify
     Toastify({
-        text: `¡${productoAgregado.nombre} fue agregado al carrito!`,
-        duration: 3000, // Duración en milisegundos
-        close: true, // Muestra el botón de cerrar
-        gravity: "top", // Posición vertical
-        position: "right", // Posición horizontal
-        backgroundColor: "#900C3F", // Color de fondo
-        stopOnFocus: true // Detiene la animación cuando el usuario pasa el mouse sobre la notificación
+        text: `¡${productoAgregado.nombre} fue agregado al Bolso!`,
+        duration: 3000, 
+        close: true, 
+        gravity: "top", 
+        position: "right", 
+        backgroundColor: "#900C3F", 
+        stopOnFocus: true 
     }).showToast();
 }
 

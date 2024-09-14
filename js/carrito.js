@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productoDiv.style.backgroundColor = 'white';
             productoDiv.style.width = '270px';
             productoDiv.style.boxSizing = 'border-box';
-            productoDiv.style.fontFamily = 'kanit, sans-serif'; // Aplicar la fuente
+            productoDiv.style.fontFamily = 'kanit, sans-serif'; 
 
             // Estilo para la imagen dentro del div
             const imagen = productoDiv.querySelector('img');
@@ -81,8 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
         finalizarCompraBtn.textContent = 'Finalizar Compra';
 
         // Estilos para el botón de finalizar compra
-        finalizarCompraBtn.style.backgroundColor = '#28a745'; // Color de fondo verde
-        finalizarCompraBtn.style.color = 'white'; // Color del texto
+        finalizarCompraBtn.style.backgroundColor = '#28a745'; 
+        finalizarCompraBtn.style.color = 'white'; 
         inalizarCompraBtn.style.border = 'none';
         finalizarCompraBtn.style.padding = '15px 22px';
         finalizarCompraBtn.style.borderRadius = '7px'; 
