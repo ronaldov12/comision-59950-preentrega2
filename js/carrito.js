@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             productoDiv.style.backgroundColor = 'white';
             productoDiv.style.width = '270px';
             productoDiv.style.boxSizing = 'border-box';
-            productoDiv.style.fontFamily = 'kanit, sans-serif'; 
+            productoDiv.style.fontFamily = 'kanit, sans-serif';
 
             // Estilo para la imagen dentro del div
             const imagen = productoDiv.querySelector('img');
@@ -81,14 +81,14 @@ document.addEventListener('DOMContentLoaded', () => {
         finalizarCompraBtn.textContent = 'Finalizar Compra';
 
         // Estilos para el botón de finalizar compra
-        finalizarCompraBtn.style.backgroundColor = '#28a745'; 
-        finalizarCompraBtn.style.color = 'white'; 
-        inalizarCompraBtn.style.border = 'none';
+        finalizarCompraBtn.style.backgroundColor = '#28a745';
+        finalizarCompraBtn.style.color = 'white';
+        finalizarCompraBtn.style.border = 'none';
         finalizarCompraBtn.style.padding = '15px 22px';
-        finalizarCompraBtn.style.borderRadius = '7px'; 
-        finalizarCompraBtn.style.cursor = 'pointer'; 
-        finalizarCompraBtn.style.fontSize = '16px'; 
-        finalizarCompraBtn.style.marginTop = '20px'; 
+        finalizarCompraBtn.style.borderRadius = '7px';
+        finalizarCompraBtn.style.cursor = 'pointer';
+        finalizarCompraBtn.style.fontSize = '16px';
+        finalizarCompraBtn.style.marginTop = '20px';
 
         // Agrego un evento al botón para llamar a la función finalizarCompra cuando se hace clic
         finalizarCompraBtn.addEventListener('click', () => finalizarCompra(productosEnCarrito));
@@ -200,52 +200,8 @@ function pagarEnCuotas(total) {
         }
     });
 }
-
-// Función asíncrona para simular el pago con tarjeta de crédito
-async function simularPagoConTarjeta(montoTotal) {
-    const { value: datos } = await Swal.fire({
-        // Muestra una ventana emergente con SweetAlert2 para ingresar los datos de la tarjeta
-        title: 'Ingrese los datos de su tarjeta',
-        html: `
-            <input id="numeroTarjeta" class="swal2-input" placeholder="Número de tarjeta (16 dígitos)" maxlength="16">
-            <input id="cvv" class="swal2-input" placeholder="CVV (3 dígitos)" maxlength="3">
-            <input id="vencimiento" class="swal2-input" placeholder="Fecha de vencimiento (4 dígitos)" maxlength="4">
-        `,
-        focusConfirm: false,// Desactiva el enfoque automático en el primer campo de entrada
-        preConfirm: () => {// Función para extraer los datos ingresados
-            return {
-                numeroTarjeta: document.getElementById('numeroTarjeta').value,
-                cvv: document.getElementById('cvv').value,
-                vencimiento: document.getElementById('vencimiento').value
-            };
-        }
-    });
-    // Verifico si el usuario ingresó datos
-    if (datos) {
-        const { numeroTarjeta, cvv, vencimiento } = datos;
-        if (numeroTarjeta.length === 16 && cvv.length === 3 && vencimiento.length === 4) {
-            // Verific la validez de los datos ingresados
-            Toastify({
-                text: `Pago exitoso. Se ha debitado ${montoTotal}$ de su tarjeta.`,
-                duration: 4500,
-                close: true,
-                gravity: "top",
-                position: "center",
-                backgroundColor: "#249e24",
-            }).showToast();
-            return true;
-        } else {
-            Swal.fire({
-                title: 'Error en el pago. Verifique los datos e inténtelo de nuevo.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            });
-        }
-    }
-    return false;// Devuelve false si no se ingresaron datos o si los datos no son válidos
-}
-
-
+// Función para finalizar la compra
+// Función para finalizar la compra
 function finalizarCompra(carrito) {
     // Calculo el total con IVA
     const totalConIva = calcularTotalConIva(carrito);
@@ -255,12 +211,13 @@ function finalizarCompra(carrito) {
     localStorage.removeItem('productosEnCarrito');
     // Muevo el contenedor del carrito y el total a 0
     document.getElementById('carrito-contenedor').innerHTML = `
-    <p style="
-    font-size: 55px;
-    color: #888;
-    text-align: center;
-    margin-top: 20px;
-    ">El carrito está vacío.</p>
-`
+        <p style="
+        font-size: 55px;
+        color: #888;
+        text-align: center;
+        margin-top: 20px;
+        ">El carrito está vacío.</p>
+    `;
+
     document.getElementById('total-carrito').textContent = '0';
 }

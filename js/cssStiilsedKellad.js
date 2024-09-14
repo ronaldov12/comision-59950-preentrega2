@@ -58,7 +58,7 @@ document.getElementById('heroSection').appendChild(heroSection);
 
 heroSection.style.position = 'relative';
 heroSection.style.height = '80vh'; 
-heroSection.style.backgroundImage = 'url("./img/herosection.webp")';
+heroSection.style.backgroundImage = 'url("/img/herosection.webp")';
 heroSection.style.backgroundSize = 'cover'; 
 heroSection.style.backgroundPosition = 'center'; 
 heroSection.style.backgroundRepeat = 'no-repeat'; 
